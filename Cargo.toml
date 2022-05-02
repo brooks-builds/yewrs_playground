@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 yew = "0.19.3"
-yew_component_library = { path = "../yew_component_library" }
+yew_component_library = "0.1.0"

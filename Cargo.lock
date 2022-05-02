@@ -436,6 +436,8 @@ dependencies = [
 [[package]]
 name = "yew_component_library"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "862b0be52eb3bd9411433056a720a6df56a37c2bb36c54618a4f80617755720c"
 dependencies = [
  "yew",
 ]
