@@ -1,0 +1,8 @@
+[[hooks]]
+# This hook example shows running a command inside a shell. As a result, features such as variable
+# interpolation are available. This shows the TRUNK_STAGING_DIR environment variable, one of a set
+# of default variables that Trunk inserts into your hook's environment. Additionally, this hook
+# uses the build stage, meaning it executes in parallel with all of the existing asset pipelines.
+stage = "build"
+command = "sh"
+command_arguments = ["-c", "export TEST_ENV_2='Hello from trunk config'"]

@@ -8,3 +8,7 @@ edition = "2021"
 [dependencies]
 yew = "0.19.3"
 yew_component_library = "0.1.0"
+yew-router = "0.16.0"
+gloo = "0.7.0"
+yewdux-functional = "0.1.0"
+yewdux = "0.7.0"
