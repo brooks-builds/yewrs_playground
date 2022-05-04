@@ -12,3 +12,6 @@ yew-router = "0.16.0"
 gloo = "0.7.0"
 yewdux-functional = "0.1.0"
 yewdux = "0.7.0"
+js-sys = "0.3.57"
+rand_os = { version = "0.2.2", features = ["wasm-bindgen"] }
+web-sys = { version = "0.3.57", features = ["Location", 'Window' ] }

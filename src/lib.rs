@@ -1,10 +1,10 @@
 pub mod pages;
 mod router;
+pub mod utils;
 mod yewdux_store;
 
 use router::{switch, Route};
 use yew::prelude::*;
-use yew_component_library::atoms::bb_text::{text_type::BBTextType, BBText};
 use yew_router::prelude::*;
 
 #[function_component(App)]
@@ -13,8 +13,11 @@ pub fn app() -> Html {
       <div>
         <BrowserRouter>
           <Switch<Route> render={Switch::render(switch)} />
-          <BBText text_type={BBTextType::Title} text="Yew.rs Playground" />
-          <BBText text="This is a paragraph" />
+          <ul>
+            <li><Link<Route> to={Route::Home}>{"Home"}</Link<Route>></li>
+            <li><Link<Route> to={Route::UsingAComponentLibrary}>{"Using a Component Library"}</Link<Route>></li>
+            <li><Link<Route> to={Route::Authentication}>{"Authentication"}</Link<Route>></li>
+          </ul>
         </BrowserRouter>
       </div>
     }

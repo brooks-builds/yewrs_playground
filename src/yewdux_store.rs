@@ -1,14 +1,9 @@
-#[derive(Debug, Clone)]
+use yewdux::prelude::*;
+
+#[derive(Debug, Clone, Default)]
 pub struct AuthStore {
     pub loading: bool,
     pub is_authenticated: bool,
 }
 
-impl Default for AuthStore {
-    fn default() -> Self {
-        Self {
-            loading: true,
-            is_authenticated: false,
-        }
-    }
-}
+pub type AuthStoreType = BasicStore<AuthStore>;
