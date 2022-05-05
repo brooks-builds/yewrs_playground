@@ -5,4 +5,5 @@ do
   export "$LINE"
 done
 
+code .
 trunk serve
