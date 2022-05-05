@@ -14,7 +14,7 @@ pub fn app() -> Html {
     let context = use_state(AppContext::default);
 
     let mut auth0 = context.auth0.clone();
-    auth0.handleRedirectCallback().unwrap();
+    auth0.handle_redirect_callback().unwrap();
 
     html! {
       <div>
