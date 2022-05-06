@@ -835,6 +835,7 @@ dependencies = [
  "serde",
  "serde_json",
  "url",
+ "wasm-bindgen",
  "web-sys",
  "yew",
  "yew-router",

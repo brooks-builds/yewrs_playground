@@ -9,24 +9,23 @@ use yew_router::{
 use yewdux_functional::use_store;
 
 use crate::{
+    app,
+    context::{auth0::Auth0, AppContext},
     utils::{create_random_string, log_string},
     yewdux_store::AuthStoreType,
 };
 
 #[function_component(Authentication)]
 pub fn authentication() -> Html {
+    let app_context = use_context::<AppContext>().unwrap();
+
     let (auth_loading, is_authenticated) = use_store::<AuthStoreType>()
         .state()
         .map(|s| (s.loading, s.is_authenticated))
         .unwrap_or_default();
 
-    let login_onclick = Callback::from(|_event: MouseEvent| {
-        let login_url = create_login_url();
-        log_string(&login_url);
-        gloo::utils::window()
-            .location()
-            .set_href(&login_url)
-            .unwrap();
+    let login_onclick = Callback::from(move |_event: MouseEvent| {
+        app_context.auth0.handle_login();
     });
 
     let logout_onclick = Callback::from(move |_event: MouseEvent| {
@@ -48,15 +47,6 @@ pub fn authentication() -> Html {
             <button onclick={login_onclick}>{"login"}</button>
       </div>
     }
-}
-
-fn create_login_url() -> String {
-    let domain = env!("AUTH0_DOMAIN");
-    let client_id = env!("AUTH0_CLIENT_ID");
-    let redirect_uri = "http://localhost:8080/authentication";
-    let state = create_random_string();
-
-    format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=openid%20profile%20email&state={state}")
 }
 
 fn create_logout_url(return_to: &str) -> String {
