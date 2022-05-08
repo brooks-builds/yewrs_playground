@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use super::user::User;
 use eyre::{bail, Result};
 use rand_os::rand_core::RngCore;
@@ -7,27 +5,16 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlDocument;
-use yew::Html;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Default)]
 pub struct Auth0 {
     pub loading: bool,
     pub is_authenticated: bool,
-    pub user: User,
+    pub user: Option<User>,
 }
 
 impl Auth0 {
-    pub fn handle_redirect_callback(&mut self) -> Result<()> {
-        self.loading = true;
-        let gloo_url = self.get_url()?;
-        let authentication_result = AuthenticationResult::new(gloo_url)?;
-        // check the state to make sure it's the one we sent
-        let cookies = self.get_state();
-        gloo::console::log!(cookies);
-        Ok(())
-    }
-
-    fn get_url(&self) -> Result<String> {
+    pub fn get_url() -> Result<String> {
         match gloo::utils::window().location().href() {
             Ok(url) => Ok(url),
             Err(error) => {
@@ -37,17 +24,17 @@ impl Auth0 {
         }
     }
 
-    pub fn handle_login(&self) {
-        let state = self.create_random_string();
-        let login_url = self.create_login_url(&state);
-        self.store_state(&state);
+    pub fn handle_login() {
+        let state = Auth0::create_random_string();
+        let login_url = Auth0::create_login_url(&state);
+        Auth0::store_state(&state);
         gloo::utils::window()
             .location()
             .set_href(&login_url)
             .unwrap();
     }
 
-    pub fn create_random_string(&self) -> String {
+    pub fn create_random_string() -> String {
         let mut random_numbers = [0u8; 43];
         let charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_~.";
         let charset_length = charset.len();
@@ -67,42 +54,68 @@ impl Auth0 {
             .join("")
     }
 
-    fn create_login_url(&self, state: &str) -> String {
+    fn create_login_url(state: &str) -> String {
         let domain = env!("AUTH0_DOMAIN");
         let client_id = env!("AUTH0_CLIENT_ID");
-        let redirect_uri = "http://localhost:8080/authentication";
+        let redirect_uri = "http://localhost:8080/login-callback";
 
         format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=openid%20profile%20email&state={state}")
     }
 
-    fn store_state(&self, state: &str) {
+    fn store_state(state: &str) {
         let document = gloo::utils::document();
         let html_document = document.dyn_into::<HtmlDocument>().unwrap();
         let cookie = format!("auth0state={state}; SameSite=Strict; Secure");
         html_document.set_cookie(&cookie);
     }
 
-    fn get_state(&self) -> String {
-        gloo::utils::document()
+    pub fn get_state() -> Result<String> {
+        let cookie_string = gloo::utils::document()
             .dyn_into::<HtmlDocument>()
             .unwrap()
             .cookie()
-            .unwrap()
-    }
-}
+            .unwrap();
+        let mut raw_cookies = cookie_string.split("; ");
+        // raw_cookies.find(|cookie| {
+        //     if cookie.contains("auth0state=") {
+        //         if let Some(cookie_state) = cookie.split('=').last() {
+        //             cookie_state.to_owned()
+        //         }
+        //     }
+        //     gloo::console::log!(*item);
+        //     false
+        // });
+        for raw_cookie in raw_cookies {
+            if !raw_cookie.contains("auth0state=") {
+                continue;
+            }
 
-impl Default for Auth0 {
-    fn default() -> Self {
-        Self {
-            loading: true,
-            is_authenticated: Default::default(),
-            user: Default::default(),
+            return Ok(raw_cookie.split('=').last().unwrap().to_owned());
         }
+
+        bail!("could not find state cookie");
+    }
+
+    pub async fn get_user(token: &str) -> Result<User> {
+        let domain = env!("AUTH0_DOMAIN");
+        let url = format!("https://{domain}/userinfo");
+        let bearer_token = format!("Bearer {token}");
+        let response = gloo::net::http::Request::get(&url)
+            .header("Authorization", &bearer_token)
+            .send()
+            .await?;
+
+        if !response.ok() {
+            gloo::console::error!(response.status_text());
+            bail!("error in response");
+        }
+
+        Ok(response.json::<User>().await?)
     }
 }
 
 #[derive(Default, Serialize, Deserialize, PartialEq, Debug)]
-struct AuthenticationResult {
+pub struct AuthenticationResult {
     pub access_token: String,
     pub scope: String,
     pub expires_in: i32,
@@ -118,7 +131,6 @@ impl AuthenticationResult {
             Some(fragment) => fragment,
             None => bail!("no fragment found in URL"),
         };
-        gloo::console::log!("fragment string", fragment);
         let mut fragments = fragment.split(|character| character == '=' || character == '&');
         loop {
             let key = if let Some(key) = fragments.next() {

@@ -1,9 +1,5 @@
 use yewdux::prelude::*;
 
-#[derive(Debug, Clone, Default)]
-pub struct AuthStore {
-    pub loading: bool,
-    pub is_authenticated: bool,
-}
+use crate::auth::auth0::Auth0;
 
-pub type AuthStoreType = BasicStore<AuthStore>;
+pub type AuthStoreType = BasicStore<Auth0>;
