@@ -1,5 +1,6 @@
 use crate::pages::{
     authentication::Authentication, home::Home, login_callback::LoginCallback, stripe::Stripe,
+    stripe_cancel::StripeCancel, stripe_success::StripeSuccess,
     using_a_component_library::UsingAComponentLibrary,
 };
 use yew::prelude::*;
@@ -17,6 +18,10 @@ pub enum Route {
     LoginCallback,
     #[at("/stripe")]
     Stripe,
+    #[at("/stripe-success")]
+    StripeSuccess,
+    #[at("/stripe-cancel")]
+    StripeCancel,
 }
 
 pub fn switch(route: &Route) -> Html {
@@ -26,5 +31,7 @@ pub fn switch(route: &Route) -> Html {
         Route::Authentication => html! { <Authentication /> },
         Route::LoginCallback => html! { <LoginCallback /> },
         Route::Stripe => html! { <Stripe /> },
+        Route::StripeSuccess => html! { <StripeSuccess /> },
+        Route::StripeCancel => html! { <StripeCancel /> },
     }
 }
