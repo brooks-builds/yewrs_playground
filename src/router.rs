@@ -1,5 +1,5 @@
 use crate::pages::{
-    authentication::Authentication, home::Home, login_callback::LoginCallback,
+    authentication::Authentication, home::Home, login_callback::LoginCallback, stripe::Stripe,
     using_a_component_library::UsingAComponentLibrary,
 };
 use yew::prelude::*;
@@ -13,8 +13,10 @@ pub enum Route {
     UsingAComponentLibrary,
     #[at("/authentication")]
     Authentication,
-    #[at("login-callback")]
+    #[at("/login-callback")]
     LoginCallback,
+    #[at("/stripe")]
+    Stripe,
 }
 
 pub fn switch(route: &Route) -> Html {
@@ -23,5 +25,6 @@ pub fn switch(route: &Route) -> Html {
         Route::UsingAComponentLibrary => html! { <UsingAComponentLibrary /> },
         Route::Authentication => html! { <Authentication /> },
         Route::LoginCallback => html! { <LoginCallback /> },
+        Route::Stripe => html! { <Stripe /> },
     }
 }
