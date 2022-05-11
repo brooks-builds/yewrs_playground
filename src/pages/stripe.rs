@@ -14,8 +14,8 @@ pub fn stripe() -> Html {
       <div>
         <h1>{"Stripe"}</h1>
         <form action={checkout_uri} method="POST">
-          <input type="text" name="cancel_uri" value={cancel_uri} disabled={true} />
-          <input type="text" name="success_uri" value={success_uri} disabled={true} />
+          <input type="text" name="cancel_uri" value={cancel_uri} />
+          <input type="text" name="success_uri" value={success_uri} />
           <button>{"Let's go to stripe!"}</button>
         </form>
       </div>

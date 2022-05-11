@@ -21,6 +21,7 @@ pub fn app() -> Html {
               <li><Link<Route> to={Route::UsingAComponentLibrary}>{"Using a Component Library"}</Link<Route>></li>
               <li><Link<Route> to={Route::Authentication}>{"Authentication"}</Link<Route>></li>
               <li><Link<Route> to={Route::Stripe}>{"Stripe"}</Link<Route>></li>
+              <li><Link<Route> to={Route::GraphQL}>{"GraphQL"}</Link<Route>></li>
             </ul>
           </BrowserRouter>
       </div>

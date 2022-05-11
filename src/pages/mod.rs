@@ -1,4 +1,5 @@
 pub mod authentication;
+pub mod graphql;
 pub mod home;
 pub mod login_callback;
 pub mod stripe;

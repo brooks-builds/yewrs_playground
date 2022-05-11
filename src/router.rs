@@ -1,6 +1,6 @@
 use crate::pages::{
-    authentication::Authentication, home::Home, login_callback::LoginCallback, stripe::Stripe,
-    stripe_cancel::StripeCancel, stripe_success::StripeSuccess,
+    authentication::Authentication, graphql::GraphQL, home::Home, login_callback::LoginCallback,
+    stripe::Stripe, stripe_cancel::StripeCancel, stripe_success::StripeSuccess,
     using_a_component_library::UsingAComponentLibrary,
 };
 use yew::prelude::*;
@@ -22,6 +22,8 @@ pub enum Route {
     StripeSuccess,
     #[at("/stripe-cancel")]
     StripeCancel,
+    #[at("/graphql")]
+    GraphQL,
 }
 
 pub fn switch(route: &Route) -> Html {
@@ -33,5 +35,6 @@ pub fn switch(route: &Route) -> Html {
         Route::Stripe => html! { <Stripe /> },
         Route::StripeSuccess => html! { <StripeSuccess /> },
         Route::StripeCancel => html! { <StripeCancel /> },
+        Route::GraphQL => html! { <GraphQL /> },
     }
 }
