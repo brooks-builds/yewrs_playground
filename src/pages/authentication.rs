@@ -26,7 +26,7 @@ pub fn authentication() -> Html {
     });
 
     let logout_onclick = Callback::from(move |_event: MouseEvent| {
-        // handle logout
+        Auth0::handle_logout();
     });
 
     html! {

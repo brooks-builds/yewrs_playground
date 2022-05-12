@@ -1,5 +1,6 @@
 use super::user::User;
 use eyre::{bail, Result};
+use js_sys::global;
 use rand_os::rand_core::RngCore;
 use serde::{Deserialize, Serialize};
 use url::Url;
@@ -59,7 +60,7 @@ impl Auth0 {
         let client_id = env!("AUTH0_CLIENT_ID");
         let redirect_uri = "http://localhost:8080/login-callback";
 
-        format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=openid%20profile%20email&state={state}")
+        format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=profile openid email&state={state}")
     }
 
     fn store_state(state: &str) {
@@ -111,6 +112,18 @@ impl Auth0 {
         }
 
         Ok(response.json::<User>().await?)
+    }
+
+    pub fn handle_logout() {
+        let domain = env!("AUTH0_DOMAIN");
+        let client_id = env!("AUTH0_CLIENT_ID");
+        let logout_url = env!("LOGOUT_URL");
+        gloo::utils::window()
+            .location()
+            .set_href(&format!(
+                "https://{domain}/v2/logout?client_id={client_id}&returnTo={logout_url}"
+            ))
+            .unwrap();
     }
 }
 
