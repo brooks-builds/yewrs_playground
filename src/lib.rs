@@ -1,4 +1,5 @@
 mod auth;
+mod graphql_queries;
 pub mod pages;
 mod router;
 pub mod utils;
