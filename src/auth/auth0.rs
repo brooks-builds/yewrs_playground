@@ -58,9 +58,9 @@ impl Auth0 {
     fn create_login_url(state: &str) -> String {
         let domain = env!("AUTH0_DOMAIN");
         let client_id = env!("AUTH0_CLIENT_ID");
-        let redirect_uri = "http://localhost:8080/login-callback";
+        let redirect_uri = "http://localhost:8081/login-callback";
 
-        format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=profile openid email&state={state}")
+        format!("https://{domain}/authorize?response_type=token&client_id={client_id}&redirect_uri={redirect_uri}&scope=profile openid email&state={state}&audience=Hasura")
     }
 
     fn store_state(state: &str) {

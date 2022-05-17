@@ -1,3 +1,6 @@
+[serve]
+port = 8081
+
 [[hooks]]
 # This hook example shows running a command inside a shell. As a result, features such as variable
 # interpolation are available. This shows the TRUNK_STAGING_DIR environment variable, one of a set
